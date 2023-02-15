@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/gob"
 	"fmt"
 	"io"
 	"log"
@@ -15,7 +14,7 @@ import (
 
 const (
 	protocol = "unix"
-	sockAddr = "/tmp/command-prompt.sock"
+	sockAddr = "/tmp/comm_format_2.sock"
 )
 
 func main() {
@@ -60,12 +59,9 @@ func main() {
 func echo(conn net.Conn) {
 	defer conn.Close()
 
-	decoder := gob.NewDecoder(conn)
-	encoder := gob.NewEncoder(conn)
-
 	for {
 		m := &message.Echo{}
-		err := decoder.Decode(m)
+		err := m.Read(conn)
 		if err != nil {
 			if err == io.EOF {
 				fmt.Println("=== closed by client")
@@ -82,7 +78,7 @@ func echo(conn net.Conn) {
 		m.Length = len(s)
 		m.Data = []byte(s)
 
-		err = encoder.Encode(m)
+		err = m.Write(conn)
 		if err != nil {
 			log.Println(err)
 			break

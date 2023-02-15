@@ -15,7 +15,7 @@ import (
 
 const (
 	protocol = "unix"
-	sockAddr = "/tmp/command-prompt.sock"
+	sockAddr = "/tmp/using_gob.sock"
 )
 
 func main() {
@@ -62,7 +62,6 @@ func echo(conn net.Conn) {
 
 	decoder := gob.NewDecoder(conn)
 	encoder := gob.NewEncoder(conn)
-
 	for {
 		m := &message.Echo{}
 		err := decoder.Decode(m)

@@ -5,16 +5,24 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"golang-socket-programming/pkg/message"
 )
 
 const (
 	protocol = "unix"
-	sockAddr = "/tmp/command-prompt.sock"
+	sockAddr = "/tmp/using_gob.sock"
 )
 
 func main() {
+	values := []string{
+		"hello world",
+		"golang",
+		"goroutine",
+		"this program runs on crostini",
+	}
+
 	conn, err := net.Dial(protocol, sockAddr)
 	if err != nil {
 		log.Fatal(err)
@@ -24,17 +32,12 @@ func main() {
 	decoder := gob.NewDecoder(conn)
 	encoder := gob.NewEncoder(conn)
 
-	for {
-		var text string
-		fmt.Printf("input text > ")
-		fmt.Scan(&text)
-		if text == "exit" {
-			break
-		}
+	for _, v := range values {
+		time.Sleep(1 * time.Second)
 
 		m := &message.Echo{
-			Length: len(text),
-			Data:   []byte(text),
+			Length: len(v),
+			Data:   []byte(v),
 		}
 
 		err = encoder.Encode(m)

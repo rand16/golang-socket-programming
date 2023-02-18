@@ -11,7 +11,7 @@ import (
 
 const (
 	protocol = "unix"
-	sockAddr = "/tmp/comm_format_2.sock"
+	sockAddr = "/tmp/comm_format_1.sock"
 )
 
 func main() {

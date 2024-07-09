@@ -11,18 +11,26 @@ import (
 
 const (
 	protocol = "unix"
-	sockAddr = "/tmp/sock3.sock"
+	sockAddr = "/tmp/sock1.sock"
 )
 
-func main() {
-	conn, err := net.Dial(protocol, sockAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
+var textsocket = map[string]string{
+	"socket1": "/tmp/sock1.sock",
+	"socket2": "/tmp/sock2.sock",
+	"socket3": "/tmp/sock3.sock",
+}
 
-	decoder := gob.NewDecoder(conn)
-	encoder := gob.NewEncoder(conn)
+func main() {
+	/*
+		conn, err := net.Dial(protocol, sockAddr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+
+		decoder := gob.NewDecoder(conn)
+		encoder := gob.NewEncoder(conn)
+	*/
 
 	for {
 		var text string
@@ -31,6 +39,15 @@ func main() {
 		if text == "exit" {
 			break
 		}
+		sock := textsocket[text]
+		conn, err := net.Dial(protocol, sock)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+
+		decoder := gob.NewDecoder(conn)
+		encoder := gob.NewEncoder(conn)
 
 		m := &message.Echo{
 			Length: len(text),
@@ -38,6 +55,7 @@ func main() {
 		}
 
 		err = encoder.Encode(m)
+		fmt.Println(m)
 		if err != nil {
 			log.Fatal(err)
 		}

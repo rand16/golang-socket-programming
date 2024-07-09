@@ -15,3 +15,5 @@ sudo apt install -y socat
 mv /tmp/echo.sock /tmp/echo.sock.original
 socat -t100 -x -v UNIX-LISTEN:/tmp/echo.sock,mode=777,reuseaddr,fork UNIX-CONNECT:/tmp/echo.sock.original
 ```
+
+(2024/07/09) メモ

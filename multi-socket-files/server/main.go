@@ -85,6 +85,7 @@ func echo1(conn net.Conn) {
 	for {
 		m := &message.Echo{}
 		err := decoder.Decode(m)
+		fmt.Println(m)
 		if err != nil {
 			if err == io.EOF {
 				fmt.Println("=== closed by client")
